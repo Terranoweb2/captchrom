@@ -24,6 +24,9 @@
       theme: {
         extend: {
           fontFamily: { sans: ['Inter', 'sans-serif'] },
+          screens: {
+            'xs': '480px',
+          },
           animation: {
             'fadeInUp': 'fadeInUp 0.8s ease-out forwards',
             'fadeIn': 'fadeIn 1s ease-out forwards',
@@ -69,16 +72,9 @@
     .animate-delay-600 { animation-delay: 0.6s; }
     .opacity-0-init { opacity: 0; }
 
-    /* NAV mobile menu */
     #mobile-menu { display: none; }
     #mobile-menu.open { display: flex; }
 
-    /* Pricing toggle */
-    .toggle-checkbox:checked ~ .toggle-label { background-color: #4f46e5; }
-    .toggle-checkbox:checked ~ .toggle-label .toggle-dot { transform: translateX(100%); }
-    .toggle-dot { transition: transform 0.2s; }
-
-    /* Scroll reveal */
     .reveal {
       opacity: 0;
       transform: translateY(24px);
@@ -89,34 +85,118 @@
       transform: translateY(0);
     }
 
-    /* Testimonials : no overflow on small screens */
-    .testimonial-grid { display: grid; gap: 1.5rem; }
-
-    /* Ensure images don't overflow */
     img { max-width: 100%; height: auto; display: block; }
 
-    /* Fix bento grid on small screens */
-    @media (max-width: 767px) {
-      .bento-grid { grid-template-columns: 1fr !important; }
-      .bento-col-span-2 { grid-column: span 1 !important; }
-      .bento-col-span-3 { grid-column: span 1 !important; }
+    nav { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+
+    @media (min-width: 640px) and (max-width: 1023px) {
+      .bento-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+      }
+      .bento-featured {
+        grid-column: span 2 !important;
+      }
+      .bento-normal {
+        grid-column: span 1 !important;
+      }
+    }
+    @media (max-width: 639px) {
+      .bento-grid {
+        grid-template-columns: 1fr !important;
+      }
+      .bento-featured,
+      .bento-normal {
+        grid-column: span 1 !important;
+      }
     }
 
-    /* Pricing cards stack on mobile */
     @media (max-width: 1023px) {
-      .pricing-featured { transform: scale(1) !important; }
+      .pricing-grid {
+        grid-template-columns: 1fr !important;
+        max-width: 480px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .pricing-featured {
+        transform: scale(1) !important;
+        order: -1;
+      }
     }
 
-    /* Steps connector line hidden on mobile */
+    @media (min-width: 640px) and (max-width: 1023px) {
+      .testimonial-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+      }
+      .testimonial-grid > *:last-child {
+        grid-column: span 2;
+        max-width: 420px;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+      }
+    }
+    @media (max-width: 639px) {
+      .testimonial-grid {
+        grid-template-columns: 1fr !important;
+      }
+    }
+
+    @media (min-width: 640px) and (max-width: 1023px) {
+      .steps-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+      }
+    }
+    @media (max-width: 639px) {
+      .steps-grid {
+        grid-template-columns: 1fr !important;
+      }
+    }
     @media (max-width: 767px) {
       .step-connector { display: none; }
     }
 
-    nav { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    .hero-stats {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem 1.5rem;
+    }
 
-    /* Mobile nav */
-    @media (max-width: 767px) {
-      .hero-stats { flex-direction: column; gap: 0.75rem; align-items: center; }
+    @media (min-width: 640px) and (max-width: 1023px) {
+      .logos-band {
+        gap: 1.5rem 2.5rem;
+      }
+    }
+
+    @media (min-width: 640px) and (max-width: 1023px) {
+      .footer-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+      }
+    }
+    @media (max-width: 639px) {
+      .footer-grid {
+        grid-template-columns: 1fr !important;
+      }
+    }
+
+    @media (min-width: 640px) and (max-width: 1023px) {
+      .mm-steps {
+        grid-template-columns: repeat(3, 1fr) !important;
+      }
+    }
+
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .nav-desktop-links { display: flex !important; gap: 1.25rem; }
+      .nav-desktop-cta { display: flex !important; }
+      .nav-burger { display: none !important; }
+    }
+
+    @media (min-width: 640px) and (max-width: 1023px) {
+      .cta-banner-inner {
+        padding-left: 2rem;
+        padding-right: 2rem;
+      }
     }
   </style>
 </head>
@@ -135,25 +215,26 @@
           <span class="text-xl font-black text-gray-900">Snap<span class="gradient-text">Capture</span></span>
         </a>
 
-        <!-- Desktop links -->
-        <div class="hidden md:flex items-center gap-8">
-          <a href="#features" class="text-sm font-medium text-gray-600 hover:text-indigo-600 transition-colors">Fonctionnalités</a>
-          <a href="#how-it-works" class="text-sm font-medium text-gray-600 hover:text-indigo-600 transition-colors">Comment ça marche</a>
-          <a href="#pricing" class="text-sm font-medium text-gray-600 hover:text-indigo-600 transition-colors">Tarifs</a>
-          <a href="#testimonials" class="text-sm font-medium text-gray-600 hover:text-indigo-600 transition-colors">Avis</a>
+        <!-- Desktop + Tablet links (≥768px) -->
+        <div class="nav-desktop-links hidden md:flex items-center gap-6 lg:gap-8">
+          <a href="#features" class="text-sm font-medium text-gray-600 hover:text-indigo-600 transition-colors whitespace-nowrap">Fonctionnalités</a>
+          <a href="#how-it-works" class="text-sm font-medium text-gray-600 hover:text-indigo-600 transition-colors whitespace-nowrap">Comment ça marche</a>
+          <a href="#pricing" class="text-sm font-medium text-gray-600 hover:text-indigo-600 transition-colors whitespace-nowrap">Tarifs</a>
+          <a href="#testimonials" class="text-sm font-medium text-gray-600 hover:text-indigo-600 transition-colors whitespace-nowrap">Avis</a>
         </div>
 
-        <!-- Desktop CTA -->
-        <div class="hidden md:flex items-center gap-3">
-          <a href="#pricing" class="text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors">Se connecter</a>
-          <a href="#" class="inline-flex items-center gap-2 gradient-bg text-white text-sm font-semibold px-4 py-2 rounded-full hover:opacity-90 transition-opacity shadow-lg shadow-indigo-200">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-            Ajouter à Chrome
+        <!-- Desktop + Tablet CTA (≥768px) -->
+        <div class="nav-desktop-cta hidden md:flex items-center gap-3">
+          <a href="#pricing" class="text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors whitespace-nowrap">Se connecter</a>
+          <a href="#" class="inline-flex items-center gap-2 gradient-bg text-white text-sm font-semibold px-4 py-2 rounded-full hover:opacity-90 transition-opacity shadow-lg shadow-indigo-200 whitespace-nowrap">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+            <span class="hidden lg:inline">Ajouter à Chrome</span>
+            <span class="lg:hidden">Installer</span>
           </a>
         </div>
 
-        <!-- Mobile burger -->
-        <button id="burger-btn" class="md:hidden flex flex-col gap-1.5 p-2 rounded-lg hover:bg-gray-100 transition" aria-label="Menu">
+        <!-- Mobile burger (<768px) -->
+        <button id="burger-btn" class="nav-burger md:hidden flex flex-col gap-1.5 p-2 rounded-lg hover:bg-gray-100 transition" aria-label="Menu">
           <span class="w-5 h-0.5 bg-gray-700 block"></span>
           <span class="w-5 h-0.5 bg-gray-700 block"></span>
           <span class="w-5 h-0.5 bg-gray-700 block"></span>
@@ -161,7 +242,7 @@
       </div>
     </div>
 
-    <!-- Mobile menu -->
+    <!-- Mobile menu (<768px) -->
     <div id="mobile-menu" class="md:hidden flex-col bg-white border-t border-gray-100 px-4 py-4 gap-3">
       <a href="#features" class="block text-sm font-medium text-gray-700 py-2 hover:text-indigo-600 transition-colors">Fonctionnalités</a>
       <a href="#how-it-works" class="block text-sm font-medium text-gray-700 py-2 hover:text-indigo-600 transition-colors">Comment ça marche</a>
@@ -189,8 +270,8 @@
       <div class="absolute inset-0 bg-gradient-to-br from-black/75 via-black/55 to-indigo-950/80"></div>
     </div>
 
-    <!-- Floating badge — hidden on small screens to avoid overflow -->
-    <div class="absolute top-1/4 right-6 hidden xl:block opacity-80 animate-pulse-slow pointer-events-none">
+    <!-- Floating badge -->
+    <div class="absolute top-1/4 right-6 hidden lg:block opacity-80 animate-pulse-slow pointer-events-none">
       <div class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-4 w-44">
         <div class="flex items-center gap-2 mb-2">
           <div class="w-2 h-2 rounded-full bg-green-400 flex-shrink-0"></div>
@@ -202,19 +283,19 @@
       </div>
     </div>
 
-    <div class="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-20 pb-16">
+    <div class="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-8 lg:px-8 text-center pt-20 pb-16">
       <div class="inline-flex items-center gap-2 bg-indigo-500/20 border border-indigo-400/30 backdrop-blur-sm text-indigo-200 text-xs sm:text-sm font-medium px-3 sm:px-4 py-2 rounded-full mb-6 sm:mb-8 opacity-0-init animate-fadeIn">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
         Nouveau — Extension Chrome v3.0 disponible
       </div>
 
-      <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight text-white leading-none mb-6 opacity-0-init animate-fadeInUp animate-delay-200">
+      <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tight text-white leading-none mb-6 opacity-0-init animate-fadeInUp animate-delay-200">
         Capturez.<br>
         <span style="background: linear-gradient(135deg, #a5b4fc, #c084fc, #f0abfc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Annotez.</span><br>
         Partagez.
       </h1>
 
-      <p class="text-base sm:text-xl md:text-2xl font-light max-w-2xl mx-auto text-white/90 mb-8 sm:mb-10 opacity-0-init animate-fadeInUp animate-delay-400 px-2">
+      <p class="text-base sm:text-lg md:text-xl lg:text-2xl font-light max-w-2xl mx-auto text-white/90 mb-8 sm:mb-10 opacity-0-init animate-fadeInUp animate-delay-400 px-2">
         SnapCapture vous permet de capturer n'importe quelle page web, d'annoter vos captures en temps réel et de les partager instantanément avec votre équipe.
       </p>
 
@@ -229,7 +310,7 @@
         </a>
       </div>
 
-      <div class="hero-stats mt-10 sm:mt-12 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-white/60 text-xs sm:text-sm opacity-0-init animate-fadeIn animate-delay-600">
+      <div class="hero-stats mt-10 sm:mt-12 text-white/60 text-xs sm:text-sm opacity-0-init animate-fadeIn animate-delay-600">
         <div class="flex items-center gap-2">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-400 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           Gratuit pour toujours
@@ -256,35 +337,39 @@
 
   <!-- ===== LOGOS BANDE DE CONFIANCE ===== -->
   <section class="py-10 sm:py-12 bg-slate-50 border-y border-gray-100 overflow-hidden">
-    <div class="max-w-6xl mx-auto px-4">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
       <p class="text-center text-xs sm:text-sm font-medium text-gray-400 uppercase tracking-widest mb-6 sm:mb-8">Intégré avec vos outils préférés</p>
-      <div class="flex flex-wrap items-center justify-center gap-6 sm:gap-10 opacity-60">
-        <div class="flex items-center gap-2 text-gray-500 font-bold text-base sm:text-lg">
-          <svg class="w-6 h-6 sm:w-7 sm:h-7 text-indigo-500 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M10.9 2.1l-4.6 4.6c-.2.2-.4.5-.4.8v4.7c0 .3.1.6.4.8l4.6 4.6c.2.2.5.4.8.4h4.7c.3 0 .6-.1.8-.4l4.6-4.6c.2-.2.4-.5.4-.8V7.5c0-.3-.1-.6-.4-.8l-4.6-4.6c-.2-.2-.5-.4-.8-.4h-4.7c-.3 0-.6.1-.8.4z"/></svg>
+      <div class="logos-band flex flex-wrap items-center justify-center gap-5 sm:gap-8 lg:gap-10 opacity-60">
+        <div class="flex items-center gap-2 text-gray-500 font-bold text-sm sm:text-base lg:text-lg">
+          <svg class="w-6 h-6 text-indigo-500 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M10.9 2.1l-4.6 4.6c-.2.2-.4.5-.4.8v4.7c0 .3.1.6.4.8l4.6 4.6c.2.2.5.4.8.4h4.7c.3 0 .6-.1.8-.4l4.6-4.6c.2-.2.4-.5.4-.8V7.5c0-.3-.1-.6-.4-.8l-4.6-4.6c-.2-.2-.5-.4-.8-.4h-4.7c-.3 0-.6.1-.8.4z"/></svg>
           Slack
         </div>
-        <div class="flex items-center gap-2 text-gray-500 font-bold text-base sm:text-lg">
-          <svg class="w-6 h-6 sm:w-7 sm:h-7 text-gray-700 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+        <div class="flex items-center gap-2 text-gray-500 font-bold text-sm sm:text-base lg:text-lg">
+          <svg class="w-6 h-6 text-gray-700 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
           Notion
         </div>
-        <div class="flex items-center gap-2 text-gray-500 font-bold text-base sm:text-lg">
-          <svg class="w-6 h-6 sm:w-7 sm:h-7 text-blue-500 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M19 2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 13.17l7.59-7.58L21 7l-9 9z"/></svg>
+        <div class="flex items-center gap-2 text-gray-500 font-bold text-sm sm:text-base lg:text-lg">
+          <svg class="w-6 h-6 text-blue-500 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M19 2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 13.17l7.59-7.58L21 7l-9 9z"/></svg>
           Google Drive
         </div>
-        <div class="flex items-center gap-2 text-gray-500 font-bold text-base sm:text-lg">
-          <svg class="w-6 h-6 sm:w-7 sm:h-7 text-green-500 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        <div class="flex items-center gap-2 text-gray-500 font-bold text-sm sm:text-base lg:text-lg">
+          <svg class="w-6 h-6 text-green-500 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
           Gmail
         </div>
-        <div class="flex items-center gap-2 text-gray-500 font-bold text-base sm:text-lg">
-          <svg class="w-6 h-6 sm:w-7 sm:h-7 text-purple-500 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+        <div class="flex items-center gap-2 text-gray-500 font-bold text-sm sm:text-base lg:text-lg">
+          <svg class="w-6 h-6 text-purple-500 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
           Figma
+        </div>
+        <div class="flex items-center gap-2 text-gray-500 font-bold text-sm sm:text-base lg:text-lg">
+          <svg class="w-6 h-6 text-orange-500 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          Jira
         </div>
       </div>
     </div>
   </section>
 
   <!-- ===== FEATURES BENTO ===== -->
-  <section id="features" class="py-16 sm:py-24 bg-white">
+  <section id="features" class="py-16 sm:py-20 lg:py-24 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-12 sm:mb-16 reveal">
         <span class="inline-block gradient-bg text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-4">Fonctionnalités</span>
@@ -293,10 +378,10 @@
       </div>
 
       <!-- Bento Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
+      <div class="bento-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
 
-        <!-- Card 1 — Grande (2×1) vedette -->
-        <div class="md:col-span-2 bg-white border border-gray-200 rounded-3xl p-6 sm:p-8 card-hover overflow-hidden relative min-h-[240px] sm:min-h-[280px] reveal">
+        <!-- Card 1 — Vedette -->
+        <div class="bento-featured sm:col-span-2 lg:col-span-2 bg-white border border-gray-200 rounded-3xl p-6 sm:p-8 card-hover overflow-hidden relative min-h-[220px] sm:min-h-[260px] reveal">
           <div class="absolute inset-0 overflow-hidden rounded-3xl">
             <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&q=80" alt="Capture en un clic" class="w-full h-full object-cover opacity-10">
             <div class="absolute inset-0 bg-gradient-to-r from-white via-white/95 to-white/40"></div>
@@ -306,30 +391,11 @@
               <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 sm:w-6 sm:h-6 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
             </div>
             <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Capture en un clic</h3>
-            <p class="text-gray-600 leading-relaxed text-sm sm:text-base max-w-md">Capturez une zone, un onglet entier ou une page entière avec défilement automatique en un seul clic depuis votre barre d'outils Chrome. Sélection précise au pixel près.</p>
-            <div class="mt-4 sm:mt-6 flex flex-wrap gap-2">
-              <span class="bg-indigo-50 text-indigo-700 text-xs font-semibold px-3 py-1 rounded-full">Zone libre</span>
-              <span class="bg-indigo-50 text-indigo-700 text-xs font-semibold px-3 py-1 rounded-full">Onglet entier</span>
-              <span class="bg-indigo-50 text-indigo-700 text-xs font-semibold px-3 py-1 rounded-full">Page entière</span>
-              <span class="bg-indigo-50 text-indigo-700 text-xs font-semibold px-3 py-1 rounded-full">Défilement auto</span>
-            </div>
+            <p class="text-gray-500 text-sm sm:text-base max-w-md">Capturez la page entière, une zone sélectionnée ou un élément précis en moins d'une seconde. Aucune configuration requise.</p>
           </div>
         </div>
 
-        <!-- Card 2 — Annotation -->
-        <div class="bg-gradient-to-br from-indigo-600 via-purple-600 to-fuchsia-500 rounded-3xl p-6 sm:p-8 card-hover text-white reveal">
-          <div class="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-2xl flex items-center justify-center mb-4">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 sm:w-6 sm:h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-          </div>
-          <h3 class="text-xl sm:text-2xl font-bold mb-2">Annotation avancée</h3>
-          <p class="text-white/85 leading-relaxed text-sm sm:text-base">Ajoutez des flèches, textes, formes et surlignages directement sur vos captures grâce à notre éditeur intégré intuitif.</p>
-        </div>
-
-        <!-- Card 3 — Partage -->
-        <div class="bg-white border border-gray-200 rounded-3xl p-6 sm:p-8 card-hover reveal">
-          <div class="w-10 h-10 sm:w-12 sm:h-12 bg-fuchsia-100 rounded-2xl flex items-center justify-center mb-4">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 sm:w-6 sm:h-6 text-fuchsia-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-          </div>
-          <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Partage instant
+        <!-- Card 2 -->
+        <div class="bento-normal bg-indigo-50 border border-indigo-100 rounded-3xl p-6
 </body>
 </html>
